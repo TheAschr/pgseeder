@@ -1,0 +1,17 @@
+version: "3.3"
+
+services:
+  database:
+    container_name: pg-seeder-example-database
+    ports:
+      - 5435:5432
+    restart: unless-stopped
+    image: postgis/postgis:12-3.4
+    environment:
+      - FORCE_COLOR=1
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=example
+      - POSTGRES_HOST_AUTH_METHOD=password
+      # - STATEMENT_TIMEOUT=120000
