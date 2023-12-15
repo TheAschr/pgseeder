@@ -28,6 +28,11 @@ type Seeder struct {
 	progress *mpb.Progress
 }
 
+/*
+New creates a new PgSeeder. Available options are:
+
+  - WithProgress : pass in an *mpb.Progress to get progress bars
+*/
 func New(pool *pgxpool.Pool, opts ...SeederOption) *Seeder {
 	s := Seeder{
 		pool: pool,
@@ -40,13 +45,23 @@ func New(pool *pgxpool.Pool, opts ...SeederOption) *Seeder {
 	return &s
 }
 
+// Config represents a file to be seeded.
 type Config struct {
-	FileName   string
-	ChunkSize  int
+	// The path to the file to be seeded
+	FileName string
+	// ChunkSize is the number of lines to be read at a time (defaults to 100)
+	ChunkSize int
+	// HandleLine is called for each line in the file.
+	// If HandleLine returns an error, the seeder will stop running.
 	HandleLine func(batch *pgx.Batch, line []byte) error
-	Children   []Config
+	// A slice of Configs that will be run after the parent Config has finished.
+	Children []Config
 }
 
+// Run runs the seeder. It takes a context and a slice of Configs. Each Config
+// represents a file to be seeded. The Configs are run concurrently, and each
+// Config can have children Configs. The children Configs are run after the
+// parent Config has finished.
 func (s *Seeder) Run(ctx context.Context, cfgs []Config) error {
 	eg, ctx := errgroup.WithContext(ctx)
 

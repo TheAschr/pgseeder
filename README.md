@@ -1,6 +1,6 @@
-# PG Seeder
+# pgseeder - PostgreSQL Database seeder 
 
-Efficiently seed your postgres database with a hierarchical dependency structure.
+Efficiently seed your postgres database from files using a hierarchical dependency structure. Supports parallel execution, file streaming, and query batching.
 
 See a basic example [here](./examples/basic/README.md).
 
