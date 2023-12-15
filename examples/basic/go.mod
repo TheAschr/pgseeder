@@ -3,7 +3,7 @@ module github.com/TheAschr/pgseeder/examples/basic
 go 1.20
 
 require (
-	github.com/TheAschr/pgseeder v1.0.0
+	github.com/TheAschr/pgseeder v1.0.2
 	github.com/google/uuid v1.5.0
 	github.com/jackc/pgx/v5 v5.5.1
 	github.com/vbauerster/mpb/v8 v8.7.1

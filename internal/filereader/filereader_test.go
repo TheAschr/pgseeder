@@ -10,27 +10,27 @@ func TestTotalLines(t *testing.T) {
 
 	tests := []Test{
 		{
-			"testdata/20-lines.txt.gz",
+			"../../testdata/20-lines.txt.gz",
 			20,
 		},
 		{
-			"testdata/0-lines.txt.gz",
+			"../../testdata/0-lines.txt.gz",
 			0,
 		},
 		{
-			"testdata/5-lines-with-missing-line.txt.gz",
+			"../../testdata/5-lines-with-missing-line.txt.gz",
 			5,
 		},
 		{
-			"testdata/5-lines-with-empty-line.txt.gz",
+			"../../testdata/5-lines-with-empty-line.txt.gz",
 			5,
 		},
 		{
-			"testdata/10-lines-with-long-line.txt.gz",
+			"../../testdata/10-lines-with-long-line.txt.gz",
 			10,
 		},
 		{
-			"testdata/10m-lines.txt.gz",
+			"../../testdata/10m-lines.txt.gz",
 			10000000,
 		},
 	}
