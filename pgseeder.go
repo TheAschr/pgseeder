@@ -17,6 +17,7 @@ import (
 
 type SeederOption = func(s *Seeder)
 
+// Enables progress bars for the seeder.
 func WithProgress(p *mpb.Progress) SeederOption {
 	return func(s *Seeder) {
 		s.progress = p
@@ -74,15 +75,16 @@ func (s *Seeder) Run(ctx context.Context, cfgs []Config) error {
 				return fmt.Errorf("failed to create new file reader for '%s': %w", cfg.FileName, err)
 			}
 
-			numLines, err := fr.TotalLines()
-			if err != nil {
-				return fmt.Errorf("failed to get number of lines in file '%s': %w", cfg.FileName, err)
-			}
-
 			label := strings.SplitN(path.Base(cfg.FileName), ".", 2)[0]
 
 			var bar *mpb.Bar
 			if s.progress != nil {
+
+				numLines, err := fr.TotalLines()
+				if err != nil {
+					return fmt.Errorf("failed to get number of lines in file '%s': %w", cfg.FileName, err)
+				}
+
 				bar = s.progress.AddBar(numLines,
 					mpb.PrependDecorators(
 						decor.Name(label, decor.WCSyncSpaceR),

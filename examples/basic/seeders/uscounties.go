@@ -9,6 +9,10 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+var territoryAbbreviations = []string{
+	"GU", "PR", "VI", "AS", "MP",
+}
+
 var usCountyIdNS = uuid.MustParse("8b3fa54b-f47d-4e85-a177-962ce30129cf")
 
 func newUsCountyID(longName string, stateAbbr string) uuid.UUID {
@@ -40,6 +44,22 @@ func NewUsCounties(fileName string, children []pgseeder.Config) pgseeder.Config 
 
 			id := newUsCountyID(feature.Properties.NameLSAD, feature.Properties.StateUsAbbreviation)
 
+			var isTerritory bool
+			for _, t := range territoryAbbreviations {
+				if t == feature.Properties.StateUsAbbreviation {
+					isTerritory = true
+					break
+				}
+			}
+
+			var stateID *uuid.UUID
+			if !isTerritory && feature.Properties.StateUsAbbreviation != "DC" {
+				s := newUsStateID(feature.Properties.StateUsAbbreviation)
+				stateID = &s
+			}
+
+			deprecated := false
+
 			batch.Queue(`
 	INSERT INTO "UsCounty" (
 		"id", 
@@ -69,13 +89,13 @@ func NewUsCounties(fileName string, children []pgseeder.Config) pgseeder.Config 
 		"deprecated" = $8
 `,
 				id,
-				nil,
+				stateID,
 				nil,
 				feature.Properties.GeoID,
 				feature.Properties.NameLSAD,
 				feature.Properties.Name,
 				feature.Geometry,
-				false, // deprecated
+				deprecated,
 			)
 
 			return nil
